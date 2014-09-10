@@ -1,0 +1,24 @@
+<html ng-app="TarskisWorld">
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.1/angular.min.js"></script>
+        <link rel="stylesheet" href="styles.css" />
+        <script src="app.js"></script>
+        <script src="controllers.js"></script>
+        <script src="services.js"></script>
+    </head>
+	<body>
+		<div id="worlds" class="pane">
+            <center><h1>World Editor</h1></center>
+		</div>
+
+		<div id="sentences" class="pane" ng-controller="sentences">
+            <center><h1> Sentence Editor</h1></center>
+            <div id="Sentence-Editor">
+                <button ng-click="addSentence()">add sentence</button>
+                <div class='sentence-line' ng-repeat="sentence in sentences" >
+                    No. {{$index+1}} <input class="sentence" type="text" ng-model="sentence.val" >
+                </div>
+            </div>
+		</div>
+	</body>
+</html>

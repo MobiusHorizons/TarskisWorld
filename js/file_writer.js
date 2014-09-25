@@ -7,11 +7,12 @@
     function FileWriter() {}
 
     FileWriter.prototype.WriteSentences = function(data) {
-      var ln, out, _i, _len;
+      var header, ln, out, _i, _len;
+      header = "C" + (Math.round((new Date).getTime() / 1000 - 1000 * Math.random()));
       out = "7.0.1.14930\n";
       out += "linux:Linux3.13.0-35-generic\n";
       out += "SntF\n";
-      out += "C" + (Math.round((new Date).getTime() / 1000)) + "D" + (Math.round((new Date).getTime() / 1000)) + "\n";
+      out += "" + header + "D" + (Math.round((new Date).getTime() / 1000)) + "\n";
       out += "S" + (this.Checksum(out)) + "\n";
       out += "" + data.length + "\n";
       for (_i = 0, _len = data.length; _i < _len; _i++) {
@@ -19,6 +20,72 @@
         out += "" + ln + "\f";
       }
       if (data.length !== 0) {
+        out += "\n";
+      }
+      return out += "s=" + (this.Checksum(out)) + ";\n";
+    };
+
+    FileWriter.prototype.WriteWorld = function(data) {
+      var cell, ch, col, entry, header, objs, out, row, rowAr, shapes, sizes, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref;
+      data = (function() {
+        var _i, _results;
+        _results = [];
+        for (row = _i = 0; _i < 8; row = ++_i) {
+          _results.push((function() {
+            var _j, _results1;
+            _results1 = [];
+            for (col = _j = 0; _j < 8; col = ++_j) {
+              _results1.push(null);
+            }
+            return _results1;
+          })());
+        }
+        return _results;
+      })();
+      data[0][2] = {
+        shape: "dodec",
+        size: "large",
+        label: ["a", "c"]
+      };
+      objs = [];
+      for (row = _i = 0, _len = data.length; _i < _len; row = ++_i) {
+        rowAr = data[row];
+        for (col = _j = 0, _len1 = rowAr.length; _j < _len1; col = ++_j) {
+          cell = rowAr[col];
+          if (cell !== null) {
+            objs.push({
+              pos: "" + col + " " + row,
+              dat: cell
+            });
+          }
+        }
+      }
+      shapes = {
+        tetr: 1,
+        cube: 2,
+        dodec: 3
+      };
+      sizes = {
+        small: 1,
+        medium: 2,
+        large: 3
+      };
+      header = "C" + (Math.round((new Date).getTime() / 1000 - 1000 * Math.random()));
+      out = "7.0.1.14930\n";
+      out += "linux:Linux3.13.0-35-generic\n";
+      out += "WldF\n";
+      out += "" + header + "D" + (Math.round((new Date).getTime() / 1000)) + "\n";
+      out += "S" + (this.Checksum(out)) + "\n";
+      out += "" + objs.length + "\n";
+      for (_k = 0, _len2 = objs.length; _k < _len2; _k++) {
+        entry = objs[_k];
+        out += "" + shapes[entry.dat.shape] + " " + sizes[entry.dat.size] + "\n";
+        out += "" + entry.pos + "\n'";
+        _ref = entry.dat.label;
+        for (_l = 0, _len3 = _ref.length; _l < _len3; _l++) {
+          ch = _ref[_l];
+          out += ch;
+        }
         out += "\n";
       }
       return out += "s=" + (this.Checksum(out)) + ";\n";
